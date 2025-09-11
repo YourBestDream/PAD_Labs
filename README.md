@@ -90,24 +90,39 @@ All services communicate either directly via REST APIs or asynchronously using e
   - `donation`, `expense`, `debt_update` from Fund Raising, Sharing, and Tea Management.
 
 ### 7. Fund Raising Service
-- **Responsibility**: Create fundraising campaigns and process donations.
-- **Integrations**:
-  - Budgeting Service: Check available funds before launching campaigns.
-  - User Service: Validate donors.
-  - Notification Service: Inform contributors and admins.
-- **Events Emitted**:
-  - `campaign_started`, `donation_received`, `campaign_completed`.
-- **Events Received**:
-  - `budget_check` request from Budgeting Service.
+- **Responsibility**: The Fund Raising Service manages fundraising campaigns for purchasing new equipment and supplies for FAF Cab. It handles campaign creation, donation tracking, completion monitoring, and automatic integration with other services upon campaign completion.
+
+- **Service Boundaries**:
+  - Fundraising campaign lifecycle management
+  - Donation tracking and processing
+  - Campaign completion and fund distribution
+  - Integration with Budgeting Service for fund transfers
+  - Automatic item registration upon campaign completion
+
+- **Business Rules**:
+    When a campaign reaches its goal or expires:
+  - Campaign status updated to `completed`, the left over is transferred in the Budget Service as donation.
+  - If successful and type is `Sharing`: Item automatically registered in Sharing Service
+  - If successful and type is `Tea`: Item automatically registered in Tea management Service
+  - Notifications sent to all donors about completion/expiration
+
 
 ### 8. Sharing Service
-- **Responsibility**: Track shared assets such as games, cords, and kettles.
-- **Integrations**:
-  - User Service: Identify owners and renters.
-  - Budgeting Service: Update debt if item is broken.
-  - Notification Service: Alert owners when items are taken or returned.
-- **Events Emitted**:
-  - `item_taken`, `item_returned`, `damage_reported`.
+- **Responsibility**: The Sharing Service manages multi-use objects available for rental in FAF Cab, including games, cords, cups, kettles, and other shared equipment. It tracks item availability, rental status, condition, and handles notifications to owners.
+
+- **Service Boundaries**:
+  - Item inventory management
+  - Rental tracking and status updates
+  - Item condition monitoring
+  - Owner and user notifications
+  - Debt tracking for damaged items
+    
+-**Business Rules**:
+    When takes an item in rent:
+  - Created record with user&item data and duration.
+  - Before overdue there is notification send
+  - If user brakes the item it is leveraged method from Budget Service to create  debt record with the item price.
+  - Notifications sent to owners about rental of their items/return status.
 
 ### 9. Communication Service
 - **Responsibility**: Public/private chats, message storage, search, and moderation (filters, reports, sanctions)
@@ -508,6 +523,523 @@ Examples:
     }
 ```
 
+### 7. Fund Raising Service
+#### Technologies used
+- NestJs — HTTP API for commands/queries; dependency injection & OpenAPI docs.
+- Prisma ORM — ORM and database migrations.
+- RabbitMQ - message broker
+- PostgreSQL — primary relational store for items, batches, thresholds, consumption.
+- Jest — unit/integration tests.
+- Docker + Kubernetes — containerization and deployment automation.
+- GitHub Actions — CI/CD (lint, tests, build, deploy).
+
+#### Communication Protocols
+
+#### REST API Endpoints
+All endpoints use JSON format for request/response bodies.
+
+#### Event Publishing
+- Publishes events to RabbitMQ for notifications
+
+### API Endpoints
+
+#### Campaign Management
+
+#### Get All Campaigns
+```
+GET /api/campaigns
+```
+**Query Parameters:**
+- `status`: `active | completed | expired` (optional)
+- `limit`: number (optional, default: 20)
+- `offset`: number (optional, default: 0)
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "description": "string",
+      "goal": "number",
+      "expiresAt": "timestamp",
+      "currentSum": "number",
+      "donations": [
+        {
+          "userId": "string",
+          "amount": "number",
+          "createdAt": "timestamp"
+        }
+      ],
+      "type": "Tea | Sharing",
+      "status": "active | completed | expired",
+      "created_by": "string"
+    }
+  ],
+  "total": "number"
+}
+```
+
+#### Get Campaign by ID
+```
+GET /api/campaigns/{id}
+```
+**Response:**
+```json
+{
+  "id": "uuid",
+  "description": "string",
+  "goal": "number",
+  "expiresAt": "timestamp",
+  "currentSum": "number",
+  "donations": [
+    {
+      "userId": "string",
+      "amount": "number",
+      "createdAt": "timestamp"
+    }
+  ],
+  "type": "Tea | Sharing",
+  "status": "active | completed | expired",
+  "created_by": "string",
+  "created_at": "timestamp",
+  "completed_at": "timestamp|null"
+}
+```
+
+#### Create Campaign (Admin Only)
+```
+POST /api/campaigns
+```
+**Request:**
+```json
+{
+  "description": "string",
+  "itemName": "string",
+  "goal": "number",
+  "ttl": "number",
+  "type": "Tea | Sharing"
+}
+```
+**Response:**
+```json
+{
+  "id": "uuid",
+  "itemName": "string",
+  "description": "string",
+  "goal": "number",
+  "type": "Tea | Sharing",
+  "status": "active",
+  "created_at": "timestamp",
+  "expiresAt": "timestamp"
+
+}
+```
+
+#### Update Campaign (Admin Only)
+```
+PATCH /api/campaigns/{id}
+```
+**Request:**
+```json
+{
+  "description": "string",
+  "goal": "number",
+  "expiresAt": "timestamp"
+}
+```
+
+#### Delete Campaign (Admin Only)
+```
+DELETE /api/campaigns/{id}
+```
+
+### Donation Management
+
+#### Make Donation
+```
+POST /api/campaigns/{id}/donation
+```
+**Request:**
+```json
+{
+  "userId": "string",
+  "amount": "number"
+}
+```
+**Response:**
+```json
+{
+  "donation_id": "uuid",
+  "campaign_id": "uuid",
+  "user_id": "string",
+  "amount": "number",
+  "campaign_completed": "boolean",
+  "new_total": "number",
+  "createdAt": "timestamp"
+
+}
+```
+
+#### Get Campaign Donations
+```
+GET /api/campaigns/{id}/donations
+```
+**Response:**
+```json
+{
+  "donations": [
+    {
+      "id": "uuid",
+      "user_id": "string",
+      "amount": "number",
+      "created_at": "timestamp"
+    }
+  ],
+  "total_amount": "number",
+  "donor_count": "number"
+}
+```
+
+#### Get User's Donations
+```
+GET /api/campaings/{campaingId}/donations?donorId={userId}
+```
+**Response:**
+```json
+{
+  "donations": [
+    {
+      "id": "uuid",
+      "campaign_id": "uuid",
+      "amount": "number",
+      "created_at": "timestamp"
+    }
+  ],
+  "total_donated": "number"
+}
+```
+
+### Event Contracts
+
+### Events Published
+
+#### Campaign Completed Event
+**Topic:** `campaign.completed`
+**Payload:**
+```json
+{
+  "campaign_id": "uuid",
+  "description": "string",
+  "goal": "number",
+  "final_amount": "number",
+  "type": "Tea | Sharing",
+  "item_details": {
+    "name": "string",
+    "description": "string",
+    "owner": "string",
+    "price": "number"
+  },
+  "leftover_funds": "number",
+  "completed_at": "timestamp"
+}
+```
+
+#### Donation Received Event
+**Topic:** `donation.received`
+**Payload:**
+```json
+{
+  "donation_id": "uuid",
+  "campaign_id": "uuid",
+  "user_id": "string",
+  "amount": "number",
+  "campaign_progress": "number",
+  "timestamp": "timestamp"
+}
+```
+
+#### Campaign Expired Event
+**Topic:** `campaign.expired`
+**Payload:**
+```json
+{
+  "campaign_id": "uuid",
+  "description": "string",
+  "goal": "number",
+  "final_amount": "number",
+  "refund_amount": "number",
+  "expired_at": "timestamp"
+}
+```
+
+### 8. Sharing Service
+#### Technologies used
+- NestJs — HTTP API for commands/queries; dependency injection & OpenAPI docs.
+- Prisma ORM — ORM and database migrations.
+- RabbitMQ - message broker
+- PostgreSQL — primary relational store for items, batches, thresholds, consumption.
+- Jest — unit/integration tests.
+- Docker + Kubernetes — containerization and deployment automation.
+- GitHub Actions — CI/CD (lint, tests, build, deploy).
+
+#### Communication Protocols
+### REST API Endpoints
+All endpoints use JSON format for request/response bodies.
+
+### Event Publishing
+- Publishes events to RabbitMQ for notifications and budgeting updates
+
+### API Endpoints
+
+### Items Management
+
+#### Get All Items
+```
+GET /api/items
+```
+**Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "name": "string",
+      "owner": "string",
+      "status": "Ready to use | Has issues | Broken | InUse",
+      "updated_at": "timestamp",
+      "inUseBy": "string|null",
+      "expiresAt": "timestamp|null",
+      "price": "number"
+    }
+  ],
+  "meta": {
+    "total": "number",
+    "limit": "number"
+  }
+}
+```
+
+#### Get Item by ID
+```
+GET /api/items/{id}
+```
+**Response:**
+```json
+{
+  "id": "uuid",
+  "name": "string",
+  "owner": "string",
+  "status": "Ready to use | Has issues | Broken | InUse",
+  "updated_at": "timestamp",
+  "inUseBy": "string|null",
+  "expiresAt": "timestamp|null",
+  "price": "number",
+  "description": "string",
+  "condition_notes": "string"
+}
+```
+
+#### Create New Item
+```
+POST /api/items
+```
+**Request:**
+```json
+{
+  "name": "string",
+  "owner": "string",
+  "description": "string",
+  "price": "number"
+}
+```
+**Response:**
+```json
+{
+  "id": "uuid",
+  "name": "string",
+  "owner": "string",
+  "status": "Ready to use",
+  "created_at": "timestamp",
+  "price": "number"
+}
+```
+
+#### Update Item
+```
+PATCH /api/items/{id}
+```
+**Request:**
+```json
+{
+  "name": "string",
+  "description": "string",
+  "condition_notes": "string",
+  "price": "number",
+  "status": "Ready to use"
+}
+```
+
+#### Delete Item
+```
+DELETE /api/items/{id}
+```
+
+### Rental Management
+
+#### Rent Item
+```
+POST /api/items/{id}/rent
+```
+**Request:**
+```json
+{
+  "userId": "string",
+  "duration_hours": "number"
+}
+```
+**Response:**
+```json
+{
+  "rental_id": "uuid",
+  "item_id": "uuid",
+  "user_id": "string",
+  "rented_at": "timestamp",
+  "expires_at": "timestamp",
+  "status": "active"
+}
+```
+
+#### Return Item
+```
+POST /api/items/{id}/return
+```
+**Request:**
+```json
+{
+  "userId": "string",
+  "condition": "Good | Has issues | Broken",
+  "notes": "string"
+}
+```
+**Response:**
+```json
+{
+  "returned_at": "timestamp",
+  "condition": "string",
+  "debt_created": "boolean",
+  "debt_amount": "number|null"
+}
+```
+
+#### Get Item Rental History
+```
+GET /api/items/{id}/rentals
+```
+**Response:**
+```json
+{
+  "rentals": [
+    {
+      "rental_id": "uuid",
+      "user_id": "string",
+      "rented_at": "timestamp",
+      "returned_at": "timestamp|null",
+      "condition_on_return": "string|null",
+      "notes": "string|null"
+    }
+  ]
+}
+```
+
+### User Rental Management
+
+#### Get User's Current Rentals
+```
+GET /api/rentals/{userId}
+```
+**Response:**
+```json
+{
+  "rentals": [
+    {
+      "rental_id": "uuid",
+      "item_id": "uuid",
+      "item_name": "string",
+      "rented_at": "timestamp",
+      "expires_at": "timestamp",
+      "is_overdue": "boolean"
+    }
+  ]
+}
+```
+
+#### Get User's Rental History
+```
+GET /api/rentals/{userId}/history
+```
+**Response:**
+```json
+{
+  "rentals": [
+    {
+      "rental_id": "uuid",
+      "item_id": "uuid",
+      "item_name": "string",
+      "rented_at": "timestamp",
+      "returned_at": "timestamp",
+      "condition_on_return": "string"
+    }
+  ]
+}
+```
+
+### Event Contracts
+
+### Events Published
+
+#### Item Broken Event
+**Topic:** `item.broken`
+**Payload:**
+```json
+{
+  "item_id": "uuid",
+  "user_id": "string",
+  "owner_id": "string",
+  "damage_cost": "number",
+  "timestamp": "timestamp",
+  "notes": "string"
+}
+```
+
+#### Item Overdue Event
+**Topic:** `item.overdue`
+**Payload:**
+```json
+{
+  "rental_id": "uuid",
+  "item_id": "uuid",
+  "user_id": "string",
+  "owner_id": "string",
+  "overdue_hours": "number",
+  "timestamp": "timestamp"
+}
+```
+
+#### Item Returned Event
+**Topic:** `item.returned`
+**Payload:**
+```json
+{
+  "rental_id": "uuid",
+  "item_id": "uuid",
+  "user_id": "string",
+  "owner_id": "string",
+  "condition": "string",
+  "timestamp": "timestamp"
+}
+```
 
 ### 9. Communication Service
 #### Technologies used
