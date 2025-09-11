@@ -13,3 +13,6 @@
 [submodule "Kotlin/budgeting"]
 	path = Kotlin/budgeting
 	url = https://github.com/tutaf/pad-budgeting.git
+[submodule "Python/communication"]
+	path = Python/communication
+	url = https://github.com/YourBestDream/communication_microservice.git
