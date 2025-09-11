@@ -523,6 +523,180 @@ Examples:
     }
 ```
 
+## Communication Contract
+
+### 5. Lost & Found Service
+#### Technologies used
+- Ktor - HTTP API framework
+- Kotlinx Serialization - JSON handling
+- Exposed - database ORM
+- PostgreSQL - database
+- Docker - containerization
+
+#### Communication Protocols 
+##### REST API endpoints
+All endpoints use JSON format for request/response bodies
+
+#### POST `/items/{id}/threads` — Create comment thread
+Request JSON:
+```json
+{
+  "name": "Found in room 301",
+  "author_id": "user_123"
+}
+```
+Response 201 JSON:
+```json
+{
+  "id": "thread_456",
+  "author_id": "user_123",
+  "lost_item_id": "item_789",
+  "name": "Found in room 301",
+  "created_at": "2025-09-12T10:00:00Z"
+}
+```
+Side-effect events: `lost_found.thread_created`
+
+#### POST `/threads/{id}/comments` — Add comment to thread
+Request JSON:
+```json
+{
+  "author_id": "user_456",
+  "text": "I saw it yesterday near the library"
+}
+```
+Response 201 JSON:
+```json
+{
+  "id": "comment_789",
+  "author_id": "user_456",
+  "thread_id": "thread_456",
+  "text": "I saw it yesterday near the library",
+  "created_at": "2025-09-12T10:30:00Z"
+}
+```
+Side-effect events: `lost_found.comment_added`
+
+#### PUT `/items/{id}/resolve` — Mark item as resolved
+Request JSON:
+```json
+{
+  "resolved_by": "user_123"
+}
+```
+Response 200 JSON:
+```json
+{
+  "id": "item_789",
+  "is_resolved": true,
+  "updated_at": "2025-09-12T11:00:00Z"
+}
+```
+Side-effect events: `lost_found.item_resolved`
+
+### 6. Budgeting Service
+#### Technologies used
+- Ktor - HTTP API framework
+- Kotlinx Serialization - JSON handling
+- Exposed - database ORM
+- PostgreSQL - database
+- Docker - containerization
+
+#### Communication Protocols 
+##### REST API endpoints 
+All endpoints use JSON format for request/response bodies
+
+#### POST `/debts` — Create debt record
+Request JSON:
+```json
+{
+  "debtor_user_id": "user_123",
+  "amount": 25.50,
+  "name": "Damaged headphones",
+  "created_by_user_id": "admin_456"
+}
+```
+Response 201 JSON:
+```json
+{
+  "id": "debt_789",
+  "debtor_user_id": "user_123",
+  "amount": 25.50,
+  "name": "Damaged headphones",
+  "created_by_user_id": "admin_456",
+  "created_at": "2025-09-12T10:00:00Z"
+}
+```
+Side-effect events: `budgeting.debt_created`
+
+#### PUT `/debts/{id}/pay` — Process debt payment
+Request JSON:
+```json
+{
+  "amount": 25.50,
+  "paid_by": "user_123"
+}
+```
+Response 200 JSON:
+```json
+{
+  "id": "debt_789",
+  "amount": 0.00,
+  "debtor_public_execution_date": "2025-09-12T12:00:00Z"
+}
+```
+Side-effect events: `budgeting.debt_paid`
+
+#### DELETE `/debts/{id}` — Forgive debt (executor role required)
+Response 204 No Content
+
+
+Side-effect events: `budgeting.debt_forgiven`
+
+#### POST `/budget/donations` — Add donation entry
+Request JSON:
+```json
+{
+  "amount": 100.00,
+  "description": "Monthly contribution",
+  "is_donation_by_partner": false,
+  "initiated_by": "user_123"
+}
+```
+Response 201 JSON:
+```json
+{
+  "id": "budget_456",
+  "amount": 100.00,
+  "description": "Monthly contribution",
+  "is_donation_by_partner": false,
+  "total_amount_after": 1250.00,
+  "created_at": "2025-09-12T10:00:00Z"
+}
+```
+Side-effect events: `budgeting.donation_added`
+
+#### POST `/budget/expenses` — Add expense entry
+Request JSON:
+```json
+{
+  "amount": 50.00,
+  "description": "New equipment purchase",
+  "initiated_by": "admin_123"
+}
+```
+Response 201 JSON:
+```json
+{
+  "id": "budget_789",
+  "amount": 50.00,
+  "description": "New equipment purchase",
+  "total_amount_after": 1200.00,
+  "created_at": "2025-09-12T10:00:00Z"
+}
+```
+Side-effect events: `budgeting.expense_added`
+
 ### 7. Fund Raising Service
 #### Technologies used
 - NestJs — HTTP API for commands/queries; dependency injection & OpenAPI docs.
