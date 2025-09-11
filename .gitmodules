@@ -1,3 +1,9 @@
+[submodule "NestJS/fund-rasing"]
+	path = NestJS/fund-rasing
+	url = https://github.com/zEkoR1/fund-rasing.service.git
+[submodule "NestJS/sharing"]
+	path = NestJS/sharing
+	url = https://github.com/zEkoR1/sharing.servive.git
 [submodule "Python/tea_management"]
 	path = Python/tea_management
 	url = https://github.com/YourBestDream/tea_management_microservice.git
