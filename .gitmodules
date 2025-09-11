@@ -7,3 +7,6 @@
 [submodule "Python/tea_management"]
 	path = Python/tea_management
 	url = https://github.com/YourBestDream/tea_management_microservice.git
+[submodule "Python/communication"]
+	path = Python/communication
+	url = https://github.com/YourBestDream/communication_microservice.git
