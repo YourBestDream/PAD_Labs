@@ -7,3 +7,9 @@
 [submodule "Python/tea_management"]
 	path = Python/tea_management
 	url = https://github.com/YourBestDream/tea_management_microservice.git
+[submodule "NestJS/checkin"]
+	path = NestJS/checkin
+	url = https://github.com/auperman-lab/pad-chekin.git
+[submodule "NestJS/booking"]
+	path = NestJS/booking
+	url = https://github.com/auperman-lab/pad-booking.git
