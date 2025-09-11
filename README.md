@@ -140,7 +140,22 @@ All services communicate either directly via REST APIs or asynchronously using e
 
 ## Communication Contract
 
-### 2. TEA MANAGEMENT SERVICE
+### 2. Tea Management Service
+#### Technologies used
+- FastAPI — HTTP API for commands/queries; dependency injection & OpenAPI docs.
+- Pydantic v2 — request/response validation and schema serialization.
+- SQLAlchemy 2 + Alembic — ORM and database migrations.
+- PostgreSQL — primary relational store for items, batches, thresholds, consumption.
+- Postgres materialized views — fast stock/consumption reports without heavy joins.
+- Redis — caching hot reads (current stock) and lightweight distributed locks (e.g., recounts).
+- Kafka or NATS — event bus for inventory.* domain events.
+- Celery or RQ (with Redis) — background jobs (CSV exports, threshold scans).
+- OpenTelemetry + Prometheus + Grafana — tracing, metrics, dashboards.
+- Sentry — error monitoring and alerting.
+- pytest + pytest-asyncio — unit/integration tests.
+- Docker + Kubernetes — containerization and deployment automation.
+- GitHub Actions — CI/CD (lint, tests, build, deploy).
+
 
 #### POST `/items` — Create item 
   Request JSON:
@@ -495,6 +510,22 @@ Examples:
 
 
 ### 9. Communication Service
+#### Technologies used
+- FastAPI — REST endpoints for chats, members, moderation.
+- WebSockets (Starlette/Uvicorn) — realtime messaging, typing, read receipts.
+- Pydantic v2 — message/attachment schemas, validation.
+- SQLAlchemy 2 + Alembic — data access and migrations.
+- PostgreSQL — durable storage for chats, messages, sanctions, reports.
+- Redis — presence tracking, ephemeral rate limiting, in-process pub/sub for fan-out.
+- Kafka or NATS — domain events (chat.message.created, chat.moderation.sanction.applied).
+- Object storage (S3 or MinIO) — attachments; use pre-signed URLs for upload/download.
+- OpenSearch or Meilisearch — full-text search over messages and channels.
+- RE2/Hyperscan (via lib bindings) or curated rules — fast banned-word/regex moderation filters.
+- OpenTelemetry + Prometheus + Grafana — observability across realtime paths.
+- Sentry — runtime exception tracking.
+- pytest + locust/k6 — correctness and load testing for high-throughput chat paths.
+- Docker + Kubernetes — scalable deployment (HPA for WS pods).
+- GitHub Actions — CI/CD (schema checks, contract tests, rolling deploys).
 
 #### GET `/users/search?q={nickname}` — Fuzzy search by nickname
   Query: 
