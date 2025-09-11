@@ -11,7 +11,7 @@ Description of the architecture of a microservices-based system for the FAFCab, 
 | 1  | User Management         | Manage user profiles, roles, and identity synchronization with Discord |
 | 2  | Notification  | Centralized delivery of real-time alerts and notifications |
 | 3  | Communication            | Enable public/private chats with moderation and censorship |
-| 4  | Tea Management          | Centralized delivery of real-time alerts |
+| 4  | Tea Management          | Monitor tea, sugar, cups, paper, and markers consumption |
 | 5  | Cab Booking             | Schedule room bookings; integrate with Google Calendar |
 | 6  | Check-in                | Monitor entry/exit via facial recognition; detect unknown visitors |
 | 7  | Lost & Found            | Post and track lost/found items with comments and resolution status |
