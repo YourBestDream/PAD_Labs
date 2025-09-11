@@ -9,7 +9,7 @@ Description of the architecture of a microservices-based system for the FAFCab, 
 | ID | Service Name            | Primary Function |
 |----|-------------------------|------------------|
 | 1  | User Management         | Manage user profiles, roles, and identity synchronization with Discord |
-| 2  | Notification  | Track consumables usage and low-stock alerts |
+| 2  | Notification  | Centralized delivery of real-time alerts and notifications |
 | 3  | Communication            | Enable public/private chats with moderation and censorship |
 | 4  | Tea Management          | Centralized delivery of real-time alerts |
 | 5  | Cab Booking             | Schedule room bookings; integrate with Google Calendar |
