@@ -155,6 +155,231 @@ All services communicate either directly via REST APIs or asynchronously using e
 
 ## Communication Contract
 
+
+
+## 1. User Management Service
+
+### Technologies used
+
+- FastAPI — HTTP API for commands/queries; dependency injection & OpenAPI docs.
+- Pydantic v2 — request/response validation and schema serialization.
+- SQLAlchemy 2 + Alembic — ORM and database migrations.
+- PostgreSQL — primary relational store for users, roles, groups.
+- Redis — caching user profiles and session tokens.
+- Kafka or NATS — event bus for user.* domain events.
+- Celery or RQ (with Redis) — background jobs (sync Discord data, role updates).
+- OpenTelemetry + Prometheus + Grafana — tracing, metrics, dashboards.
+- Sentry — error monitoring and alerting.
+- pytest + pytest-asyncio — unit/integration tests.
+- Docker + Kubernetes — containerization and deployment automation.
+- GitHub Actions — CI/CD (lint, tests, build, deploy).
+
+---
+
+### POST /users — Create user
+
+Request JSON:
+
+```json
+{
+  "name": "Alice Johnson",
+  "username": "alice",
+  "email": "alice@example.com",
+  "role": ["student"],
+  "group_ids": ["g_123"]
+}
+```
+
+Response 201 JSON:
+
+```json
+{
+  "id": "u_42",
+  "name": "Alice Johnson",
+  "username": "alice",
+  "email": "alice@example.com",
+  "roles": ["student"],
+  "group_ids": ["g_123"],
+  "created_at": "2025-09-11T10:00:00Z",
+  "updated_at": "2025-09-11T10:00:00Z"
+}
+```
+
+Errors:
+
+- 409 CONFLICT (duplicate username/email)
+- 422 VALIDATION_ERROR
+
+---
+
+### GET /users — List users
+
+Query: q, role, group_id, limit, cursor
+
+Response 200 JSON:
+
+```json
+{
+  "users": [
+    {
+      "id": "u_42",
+      "name": "Alice Johnson",
+      "username": "alice",
+      "email": "alice@example.com",
+      "roles": ["student"],
+      "group_ids": ["g_123"],
+      "created_at": "2025-09-11T10:00:00Z",
+      "updated_at": "2025-09-11T10:00:00Z"
+    }
+  ],
+  "next_cursor": null
+}
+```
+
+---
+
+### GET /users/{user_id} — User details
+
+Path: user_id (string)
+
+Response 200 JSON:
+
+```json
+{
+  "id": "u_42",
+  "name": "Alice Johnson",
+  "username": "alice",
+  "email": "alice@example.com",
+  "roles": ["student"],
+  "group_ids": ["g_123"],
+  "created_at": "2025-09-11T10:00:00Z",
+  "updated_at": "2025-09-11T10:00:00Z"
+}
+```
+
+Errors:
+
+- 404 NOT_FOUND
+
+---
+
+### PATCH /users/{user_id} — Update user metadata
+
+Request JSON (partial):
+
+```json
+{
+  "name": "Alice J.",
+  "roles": ["student", "executor"],
+  "group_ids": ["g_123", "g_456"]
+}
+```
+
+Response 200 JSON: (same shape as GET /users/{id})
+
+Errors:
+
+- 404 NOT_FOUND
+- 422 VALIDATION_ERROR
+
+---
+
+### DELETE /users/{user_id} — Soft delete user
+
+Response 204 No Content
+
+Errors:
+
+- 404 NOT_FOUND
+
+---
+
+### GET /users/{user_id}/groups — List user's groups
+
+Response 200 JSON:
+
+```json
+{
+  "groups": [
+    { "id": "g_123", "name": "Math Class", "type": "class" },
+    { "id": "g_456", "name": "Lab Team", "type": "project" }
+  ],
+  "next_cursor": null
+}
+```
+
+---
+
+### GET /discord/groups — Fetch Discord group data
+
+Response 200 JSON:
+
+```json
+{
+  "groups": [
+    { "id": "d_g1", "name": "Math Class", "members": ["u_42", "u_43"] },
+    { "id": "d_g2", "name": "Lab Team", "members": ["u_42"] }
+  ]
+}
+```
+
+---
+
+### Event Envelopes (emitted via bus)
+
+Generic envelope (CloudEvents-like):
+
+```json
+{
+  "id": "evt-123",
+  "type": "<domain.event>",
+  "source": "user-svc",
+  "time": "2025-09-11T10:00:01Z",
+  "specversion": "1.0",
+  "data": { ... }
+}
+```
+
+Examples:
+
+#### user.created
+```json
+{
+  "id": "evt-001",
+  "type": "user.created",
+  "source": "user-svc",
+  "time": "2025-09-11T10:00:00Z",
+  "specversion": "1.0",
+  "data": {
+    "user_id": "u_42",
+    "name": "Alice Johnson",
+    "username": "alice",
+    "email": "alice@example.com",
+    "roles": ["student"],
+    "group_ids": ["g_123"]
+  }
+}
+```
+
+#### user.role.updated
+```json
+{
+  "id": "evt-002",
+  "type": "user.role.updated",
+  "source": "user-svc",
+  "time": "2025-09-11T10:05:00Z",
+  "specversion": "1.0",
+  "data": {
+    "user_id": "u_42",
+    "old_roles": ["student"],
+    "new_roles": ["student", "executor"]
+  }
+}
+```
+
+---
+
+
 ### 2. Tea Management Service
 #### Technologies used
 - FastAPI — HTTP API for commands/queries; dependency injection & OpenAPI docs.
@@ -1581,3 +1806,239 @@ Examples:
       }
     }
 ```
+---
+
+## 10. Notification Service
+
+### Technologies used
+
+- FastAPI — HTTP API for sending notifications and managing subscriptions.
+- Pydantic v2 — request/response validation.
+- Redis — caching subscription state and message delivery status.
+- RabbitMQ (RMQ) — message broker for routing notifications to channels.
+- Kafka or NATS — event bus for incoming events (from other services).
+- Celery — background workers for delivering messages asynchronously.
+- OpenTelemetry + Prometheus + Grafana — observability.
+- Sentry — error tracking.
+- Docker + Kubernetes — deployment.
+- GitHub Actions — CI/CD.
+
+---
+
+### @Subscribe (Event Consumers)
+
+The Notification Service listens to events from various sources.
+
+#### Received Event Schema
+
+```json
+{
+  "author": "string",           // ID or service name
+  "theme": "string",            // e.g., "low_stock", "new_message"
+  "desc": "string",             // description of event
+  "role_involved": ["admin"],   // list of roles affected
+  "date": "2025-09-11T10:00:00Z"
+}
+```
+
+Supported Events:
+- `inventory.low_stock`
+- `chat.message.created`
+- `moderation.sanction.applied`
+- `booking.confirmed`
+- `fund.raising.completed`
+
+---
+
+### @Emit (Outgoing Notifications)
+
+The service emits events to downstream systems.
+
+#### Emitted Event Schema
+
+```json
+{
+  "theme": "string",
+  "desc": "string",
+  "role": ["admin", "teacher"]
+}
+```
+
+Destinations:
+- Chats (via WebSocket or chat service)
+- Discord (optional integration)
+- RMQ queues (for targeted delivery)
+
+---
+
+### RMQ Queues
+
+The notification service routes messages to specific queues:
+
+1. `ALL` — broadcast to all users
+2. `Admins` — only admin users
+3. `Students` — student users
+4. `Teachers` — teacher users
+
+Each queue is consumed by appropriate clients (e.g., mobile apps, web UIs, bots).
+
+---
+
+### POST /notifications — Send a notification
+
+Request JSON:
+
+```json
+{
+  "theme": "low_stock",
+  "desc": "Tea Bags are running low!",
+  "roles": ["inventory_admin", "tea-room"],
+  "channels": ["chats", "discord"],
+  "target_user_ids": ["u_42", "u_43"]
+}
+```
+
+Response 201 JSON:
+
+```json
+{
+  "id": "n_1",
+  "theme": "low_stock",
+  "desc": "Tea Bags are running low!",
+  "roles": ["inventory_admin", "tea-room"],
+  "channels": ["chats", "discord"],
+  "target_user_ids": ["u_42", "u_43"],
+  "sent_at": "2025-09-11T10:10:00Z",
+  "status": "delivered"
+}
+```
+
+---
+
+### GET /notifications — List recent notifications
+
+Query: user_id, role, channel, limit, cursor
+
+Response 200 JSON:
+
+```json
+{
+  "notifications": [
+    {
+      "id": "n_1",
+      "theme": "low_stock",
+      "desc": "Tea Bags are running low!",
+      "roles": ["inventory_admin"],
+      "channel": "chats",
+      "read_at": "2025-09-11T10:15:00Z",
+      "sent_at": "2025-09-11T10:10:00Z"
+    }
+  ],
+  "next_cursor": null
+}
+```
+
+---
+
+### POST /notifications/discord — Push to Discord (optional)
+
+Request JSON:
+
+```json
+{
+  "webhook_url": "https://discord.com/api/webhooks/...",
+  "content": "Tea stock is low!",
+  "embeds": [
+    {
+      "title": "Low Stock Alert",
+      "description": "Tea Bags: 12 units left",
+      "color": 16711680
+    }
+  ]
+}
+```
+
+Response 201 JSON:
+
+```json
+{
+  "id": "dn_1",
+  "webhook_url": "https://...",
+  "status": "sent",
+  "sent_at": "2025-09-11T10:10:00Z"
+}
+```
+
+---
+
+### Event Envelopes (emitted via bus)
+
+#### notification.delivered
+```json
+{
+  "id": "evt-003",
+  "type": "notification.delivered",
+  "source": "notification-svc",
+  "time": "2025-09-11T10:11:00Z",
+  "specversion": "1.0",
+  "data": {
+    "notification_id": "n_1",
+    "user_id": "u_42",
+    "channel": "chats",
+    "status": "delivered"
+  }
+}
+```
+
+#### notification.failed
+```json
+{
+  "id": "evt-004",
+  "type": "notification.failed",
+  "source": "notification-svc",
+  "time": "2025-09-11T10:12:00Z",
+  "specversion": "1.0",
+  "data": {
+    "notification_id": "n_1",
+    "user_id": "u_43",
+    "channel": "discord",
+    "error": "Webhook unreachable"
+  }
+}
+```
+
+---
+
+### GET /health — Liveness/readiness
+
+Response 200 JSON:
+
+```json
+{
+  "status": "ok",
+  "version": "1.0.0",
+  "checks": {
+    "db": "ok",
+    "rmq": "ok",
+    "events": "ok"
+  },
+  "time": "2025-09-11T13:37:00Z"
+}
+```
+
+---
+
+### GET /admin/metrics — Prometheus metrics
+
+Response 200 (text/plain):
+
+```
+# HELP notifications_sent_total Total number of notifications sent
+notifications_sent_total{channel="chats"} 123
+notifications_sent_total{channel="discord"} 45
+
+# HELP notifications_failed_total Failed deliveries
+notifications_failed_total 2
+```
+
+---
