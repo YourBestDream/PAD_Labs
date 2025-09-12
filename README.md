@@ -2044,3 +2044,38 @@ notifications_failed_total 2
 ```
 
 ---
+
+# Project conventions
+
+## 1. Approvals Required for Merging
+- **Minimum 1 approval** required before merging any PR into `main` or release branches.
+
+## 2. Branching Strategy
+- All feature branches must follow naming convention:  
+  `#{issue_number}-text-description`  
+  Example: `#42-add-user-auth-service`
+
+## 3. Commit Message Format
+- Commits must reference the associated issue:  
+  `#{issue_number}: Description`  
+  Example: `#42: Add JWT auth middleware`
+
+- Use past tense: “Added”, “Fixed”, “Refactored”
+- 
+## 4. Pull Request (PR) Content Requirements
+Every PR must include:
+- Link to associated issue
+- Clear description of change and impact
+
+
+## 5. Merging Strategy
+- **Squash and merge** preferred for feature branches → clean, atomic history.
+
+
+## 6. Test Coverage
+- Minimum **60% unit test coverage** required for backend services.
+
+## 7. Versioning
+- Continuous versioning
+
+---
