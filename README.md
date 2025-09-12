@@ -154,10 +154,28 @@ All services communicate either directly via REST APIs or asynchronously using e
   - From all services: `low_stock`, `restocked`, `booking_confirmed`, `unknown_user`, `post_updated`, `donation_success`, `item_taken`, `new_message`, `message_flagged`, `sanction_applied`, `member_joined`, `member_left`,`low_funds`.
 
 ---
+## Technologies and communication patterns
+
+**Python**: Developer velocity and rich ecosystem for data-centric workloads. Its async-native design, automatic OpenAPI generation, and seamless integration with ML/AI libraries (TensorFlow, PyTorch) make it ideal for intelligent, event-driven services. Lightweight and container-friendly, Python microservices scale efficiently when paired with ASGI servers like Uvicorn — perfect for rapid iteration and scientific backend systems.
+
+**Kotlin**: Combines enterprise-grade stability with modern language ergonomics. Kotlin’s null safety, coroutines for non-blocking I/O, and seamless Java interop allow us to build high-throughput, resilient services with minimal boilerplate. Spring Cloud’s mature support for service discovery, distributed tracing, and messaging (Kafka, RabbitMQ) ensures smooth operation in complex distributed environments — making it ideal for mission-critical backend systems.
+
+**TypeScript**: Highly scalable and well-suited for large, distributed systems. Its modular architecture makes it easier to organize code and manage complex applications, while the built-in support for different communication patterns (such as gRPC, Kafka, or RabbitMQ) allows smooth integration between services. NestJS also provides strong TypeScript support, good developer tooling, and maintainable code structure, which helps ensure reliability and efficiency as the system grows. Combined with static typing and first-class async/await, TypeScript becomes ideal for full-stack, maintainable microservices at scale.
+
+---
+
+### Communication Patterns Supported
+- **Synchronous**: REST, gRPC (HTTP/2)
+- **Asynchronous**: Kafka, RabbitMQ, NATS, AWS SQS
+- **Event-Driven**: Pub/Sub, Event Sourcing, CQRS
+- **Service Mesh**: Integration with Istio, Linkerd via sidecars
+
+
+
+
+---
 
 ## Communication Contract
-
-
 
 ## 1. User Management Service
 
