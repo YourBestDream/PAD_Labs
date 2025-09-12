@@ -16,3 +16,9 @@
 [submodule "Python/communication"]
 	path = Python/communication
 	url = https://github.com/YourBestDream/communication_microservice.git
+[submodule "Python/user_management"]
+	path = Python/user_management
+	url = https://github.com/Twisside/PAD_user_management_microservice
+[submodule "Python/notification"]
+	path = Python/notification
+	url = https://github.com/Twisside/PAD_notification_microservice
