@@ -13,3 +13,12 @@
 [submodule "NestJS/booking"]
 	path = NestJS/booking
 	url = https://github.com/auperman-lab/pad-booking.git
+[submodule "Kotlin/lost_and_found"]
+	path = Kotlin/lost_and_found
+	url = https://github.com/tutaf/pad-lostnfound.git
+[submodule "Kotlin/budgeting"]
+	path = Kotlin/budgeting
+	url = https://github.com/tutaf/pad-budgeting.git
+[submodule "Python/communication"]
+	path = Python/communication
+	url = https://github.com/YourBestDream/communication_microservice.git
