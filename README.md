@@ -19,6 +19,8 @@ Description of the architecture of a microservices-based system for the FAFCab, 
 | 9  | Fund Raising            | Launch campaigns, collect donations, manage goals |
 | 10 | Sharing                 | Manage shared equipment and rental tracking |
 ---
+## Architecture Scheme
+![Architecture scheme for FAF Cab management project](photos/image.png)
 
 ## Core Architecture Components
 
