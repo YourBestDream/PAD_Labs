@@ -1,0 +1,480 @@
+services:
+  # ---------- TEA MANAGEMENT ----------
+  tea-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tea
+      POSTGRES_USER: tea
+      POSTGRES_PASSWORD: tea
+    volumes:
+      - tea_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tea -d tea"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  tea-redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  tea-app:
+    image: scarletliar/tea-management-service:0.1.1
+    environment:
+      DATABASE_URL: postgresql+asyncpg://tea:tea@tea-db:5432/tea
+      REDIS_URL: redis://tea-redis:6379/0
+    depends_on:
+      tea-db:
+        condition: service_healthy
+      tea-redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  tea-seed:
+    image: scarletliar/tea-management-service:0.1.1
+    profiles: ["tools"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://tea:tea@tea-db:5432/tea
+      REDIS_URL: redis://tea-redis:6379/0
+    depends_on:
+      tea-db:
+        condition: service_healthy
+      tea-redis:
+        condition: service_healthy
+    command: ["python", "-m", "src.utils.seed"]
+
+  tea-tests:
+    image: scarletliar/tea-management-service:0.1.1
+    profiles: ["test"]
+    environment:
+      PYTHONPATH: /app
+      DATABASE_URL: postgresql+asyncpg://tea:tea@tea-db:5432/tea
+      REDIS_URL: redis://tea-redis:6379/0
+    depends_on:
+      tea-db:
+        condition: service_healthy
+      tea-redis:
+        condition: service_healthy
+    command: ["pytest", "-vv", "-rA", "-c", "pytest.ini"]
+    tty: true
+    stdin_open: true
+
+  # ---------- COMMUNICATION ----------
+  comm-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: comm
+      POSTGRES_USER: comm
+      POSTGRES_PASSWORD: comm
+    volumes:
+      - comm_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U comm -d comm"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  comm-cache:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  meili:
+    image: getmeili/meilisearch:v1.7
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: masterKey
+    ports:
+      - "7700:7700"
+    volumes:
+      - comm_meili:/meili_data
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - comm_minio:/data
+    restart: unless-stopped
+
+  nats:
+    image: nats:2
+    ports:
+      - "4222:4222"
+    restart: unless-stopped
+
+  comm-app:
+    image: scarletliar/communication-service:0.1.1
+    environment:
+      DATABASE_URL: postgresql+asyncpg://comm:comm@comm-db:5432/comm
+      REDIS_URL: redis://comm-cache:6379/0
+      MEILI_URL: http://meili:7700
+      MEILI_API_KEY: masterKey
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      S3_BUCKET: comm-uploads
+      NATS_URL: nats://nats:4222
+    depends_on:
+      comm-db:
+        condition: service_healthy
+      comm-cache:
+        condition: service_healthy
+      meili:
+        condition: service_started
+      minio:
+        condition: service_started
+      nats:
+        condition: service_started
+    ports:
+      - "8001:8001"
+    command: >
+      uvicorn src.main:app --host 0.0.0.0 --port 8001
+      --proxy-headers --forwarded-allow-ips="*"
+    restart: unless-stopped
+
+  comm-seed:
+    image: scarletliar/communication-service:0.1.1
+    profiles: ["tools"]
+    environment:
+      DATABASE_URL: postgresql+psycopg2://comm:comm@comm-db:5432/comm
+      REDIS_URL: redis://comm-cache:6379/0
+    depends_on:
+      comm-db:
+        condition: service_healthy
+    command: ["python", "-m", "src.utils.seed"]
+
+  comm-tests:
+    image: scarletliar/communication-service:0.1.1
+    profiles: ["test"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://comm:comm@comm-db:5432/comm
+      REDIS_URL: redis://comm-cache:6379/1
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      PYTEST_ADDOPTS: "-p pytest_asyncio.plugin -q -ra"
+    depends_on:
+      comm-db:
+        condition: service_healthy
+      comm-cache:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+
+  # ---------- USER MANAGEMENT ----------
+  user-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: "${USER_DB_USER:-pad_user}"
+      POSTGRES_PASSWORD: "${USER_DB_PASSWORD:-pad_pass}"
+      POSTGRES_DB: "${USER_DB_NAME:-pad_db}"
+    volumes:
+      - user_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      default:
+        aliases:
+          - postgres-user-db
+    restart: unless-stopped
+
+  user-app:
+    image: twisside/pad.usermanagement:v1
+    environment:
+      DATABASE_URL: postgresql+psycopg2://pad_user:pad_pass@postgres-user-db:5432/pad_db
+      USER_DB_USER: pad_user
+      USER_DB_PASSWORD: pad_pass
+      USER_DB_NAME: pad_db
+      USER_DB_HOST: postgres-user-db
+      USER_DB_PORT: "5432"
+    depends_on:
+      user-db:
+        condition: service_healthy
+    ports:
+      - "8002:8002"
+    restart: unless-stopped
+
+  user-adminer:
+    image: adminer
+    depends_on:
+      - user-db
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  # ---------- NOTIFICATION ----------
+  notif-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: "${NOTIF_DB_USER:-pad_notif}"
+      POSTGRES_PASSWORD: "${NOTIF_DB_PASSWORD:-pad_notif_pass}"
+      POSTGRES_DB: "${NOTIF_DB_NAME:-pad_notif_db}"
+    volumes:
+      - notif_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      default:
+        aliases:
+          - postgres-notif-db
+    restart: unless-stopped
+
+  notif-app:
+    image: twisside/pad.notifications:v1
+    command: ["uvicorn","main:app","--host","0.0.0.0","--port","8003"]
+    environment:
+      DATABASE_URL: postgresql+psycopg2://pad_notif:pad_notif_pass@postgres-notif-db:5432/pad_notif_db
+      NOTIF_DB_USER: pad_notif
+      NOTIF_DB_PASSWORD: pad_notif_pass
+      NOTIF_DB_NAME: pad_notif_db
+      NOTIF_DB_HOST: postgres-notif-db
+      NOTIF_DB_PORT: "5432"
+    depends_on:
+      notif-db:
+        condition: service_healthy
+    ports:
+      - "8003:8003"
+    restart: unless-stopped
+
+  notif-adminer:
+    image: adminer
+    depends_on:
+      - notif-db
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+
+  # ---------- SHARING SERVICE (renewed) ----------
+  sharing-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: sharing
+      POSTGRES_PASSWORD: sharing
+      POSTGRES_DB: sharing_db
+    volumes:
+      - sharing_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sharing -d sharing_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  sharing-app:
+    image: zekor1/sharing.service:v3.01
+    command: >
+      sh -c "
+        npm ci &&
+        npx prisma migrate deploy &&
+        npx prisma generate &&
+        npm run seed &&
+        npm run start:dev
+      "
+    volumes:
+      - ./:/app
+      - /app/
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://sharing:sharing@sharing-db:5432/sharing_db
+      - CHOKIDAR_USEPOLLING=1
+      - CHOKIDAR_INTERVAL=300
+    depends_on:
+      sharing-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---------- CHECK-IN SERVICE ----------
+  checkin-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: padcheckin
+    volumes:
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      - checkin_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d padcheckin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  pad-checkin:
+    image: auperman/pad-checkin:1.1
+    container_name: pad-checkin
+    environment:
+      DATABASE_URL: postgresql://user:password@checkin-db:5432/padcheckin
+    depends_on:
+      checkin-db:
+        condition: service_healthy
+    ports:
+      - "3002:3000"
+    restart: unless-stopped
+
+  # ---------- BOOKING SERVICE ----------
+  booking-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: booking_user
+      POSTGRES_PASSWORD: booking_password
+      POSTGRES_DB: booking_db
+    volumes:
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      - booking_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U booking_user -d booking_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  pad-booking:
+    image: auperman/pad-booking:1.0
+    container_name: pad-booking
+    environment:
+      PORT: "3003"
+      POSTGRES_USER: booking_user
+      POSTGRES_PASSWORD: booking_password
+      POSTGRES_DB: booking_db
+      DATABASE_URL: postgresql://booking_user:booking_password@booking-db:5432/booking_db
+    depends_on:
+      booking-db:
+        condition: service_healthy
+    ports:
+      - "3003:3003"
+    restart: unless-stopped
+
+  # ---------- FUND-RAISING ----------
+  fundraising-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fundraising}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fundraising}
+      POSTGRES_DB: ${POSTGRES_DB:-fundraising_db}
+    volumes:
+      - fundraising_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  fundraising-app:
+    image: zekor1/fund-raising-service:latest
+    command: ["/bin/sh", "-c", "/bin/sh /app/scripts/startup-api-local.sh"]
+    ports:
+      - "${APP_PORT:-3001}:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-fundraising}:${POSTGRES_PASSWORD:-fundraising}@fundraising-db:5432/${POSTGRES_DB:-fundraising_db}}
+      CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING:-1}
+      CHOKIDAR_INTERVAL: ${CHOKIDAR_INTERVAL:-300}
+    depends_on:
+      fundraising-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---------- LOST & FOUND ----------
+  lostnfound_db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: lostnfound
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5431:5432"
+    volumes:
+      - pgdata_lostnfound:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lostnfound"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  lostnfound_app:
+    image: tutaf/pad-lostnfound:latest
+    pull_policy: always
+    environment:
+      DB_URL: "jdbc:postgresql://lostnfound_db:5432/lostnfound"
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "8084:8080"
+    depends_on:
+      lostnfound_db:
+        condition: service_healthy
+
+  # ---------- BUDGETING ----------
+  budgeting_db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: budgeting
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_budgeting:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d budgeting"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  budgeting_app:
+    image: tutaf/pad-budgeting:latest
+    pull_policy: always
+    environment:
+      DB_URL: "jdbc:postgresql://budgeting_db:5432/budgeting"
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "8085:8080"
+    depends_on:
+      budgeting_db:
+        condition: service_healthy
+
+volumes:
+  tea_pg:
+  comm_pg:
+  comm_meili:
+  comm_minio:
+  user_pg:
+  notif_pg:
+  sharing_pg:
+  fundraising_pg:
+  pgdata_lostnfound:
+  pgdata_budgeting:
+  checkin_pg:
+  booking_pg:
