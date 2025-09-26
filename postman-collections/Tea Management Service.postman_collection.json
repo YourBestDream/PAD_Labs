@@ -1,0 +1,1731 @@
+{
+	"info": {
+		"_postman_id": "c3ed0815-16ca-4367-a972-7f4a6cc59489",
+		"name": "Tea Management Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28545804"
+	},
+	"item": [
+		{
+			"name": "announcements",
+			"item": [
+				{
+					"name": "List Announcements",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/announcements",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"announcements"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/announcements",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"announcements"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"dolore exercitation sed ullamco\",\n    \"title\": \"id magna\",\n    \"body\": \"deserunt et Excepteur dolor\",\n    \"effective_from\": \"1974-08-26T03:55:58.342Z\"\n  },\n  {\n    \"id\": \"reprehenderit consectetur\",\n    \"title\": \"\",\n    \"body\": \"commodo ipsum officia consequat\",\n    \"effective_from\": \"1979-03-31T23:27:10.558Z\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Create Announcement",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"velit\",\n  \"body\": \"sit mollit do laborum ea\",\n  \"effective_from\": \"2001-07-08T14:22:58.803Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/announcements",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"announcements"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"velit\",\n  \"body\": \"sit mollit do laborum ea\",\n  \"effective_from\": \"2001-07-08T14:22:58.803Z\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/announcements",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"announcements"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"irure elit\",\n  \"title\": \"\",\n  \"body\": \"occaecat incididunt anim nulla\",\n  \"effective_from\": \"1993-08-28T19:18:37.310Z\"\n}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"velit\",\n  \"body\": \"sit mollit do laborum ea\",\n  \"effective_from\": \"2001-07-08T14:22:58.803Z\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/announcements",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"announcements"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "consumption",
+			"item": [
+				{
+					"name": "List Consumption",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/consumption",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consumption"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/consumption",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"consumption"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"nisi nostrud cupidatat aliquip\",\n    \"item_id\": \"cillum cupidatat nisi ut\",\n    \"qty\": 43578883.523652405,\n    \"user_id\": \"in magna deserunt et Ut\",\n    \"timestamp\": \"1980-11-02T21:00:17.295Z\"\n  },\n  {\n    \"id\": \"pariatur enim officia minim\",\n    \"item_id\": \"proident ad deserunt in\",\n    \"qty\": 14176733.564504042,\n    \"user_id\": \"proident velit aliquip quis\",\n    \"timestamp\": \"2024-09-28T04:38:15.571Z\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Record Consumption",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"item_id\": \"velit cupidatat occaecat\",\n  \"qty\": 58758019.746094316,\n  \"user_id\": \"eiusmod in commodo fugiat\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/consumption",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consumption"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"item_id\": \"velit cupidatat occaecat\",\n  \"qty\": 58758019.746094316,\n  \"user_id\": \"eiusmod in commodo fugiat\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/consumption",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"consumption"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"enim amet est minim quis\",\n  \"item_id\": \"p\",\n  \"qty\": -36449599.546948306,\n  \"user_id\": \"ullamco dolore proident\",\n  \"timestamp\": \"2018-10-13T22:15:56.469Z\"\n}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"item_id\": \"velit cupidatat occaecat\",\n  \"qty\": 58758019.746094316,\n  \"user_id\": \"eiusmod in commodo fugiat\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/consumption",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"consumption"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "health",
+			"item": [
+				{
+					"name": "Liveness",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{}"
+						}
+					]
+				},
+				{
+					"name": "Readiness",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/health/ready",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"ready"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/health/ready",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"health",
+										"ready"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "{item_id}",
+					"item": [
+						{
+							"name": "batches",
+							"item": [
+								{
+									"name": "Add Batch",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"qty\": -93787981.23589167,\n  \"batch_code\": \"deserunt non velit consectetur\",\n  \"supplier_ref\": \"est\",\n  \"expiry_date\": \"1965-12-24\",\n  \"currency\": \"USD\",\n  \"cost_total\": -127706.65416881442\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id/batches",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id",
+												"batches"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Successful Response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"qty\": -93787981.23589167,\n  \"batch_code\": \"deserunt non velit consectetur\",\n  \"supplier_ref\": \"est\",\n  \"expiry_date\": \"1965-12-24\",\n  \"currency\": \"USD\",\n  \"cost_total\": -127706.65416881442\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/items/:item_id/batches",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														":item_id",
+														"batches"
+													],
+													"variable": [
+														{
+															"key": "item_id",
+															"value": "dolore eiusmod ipsum nulla",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"id\": \"veniam in\",\n  \"item_id\": \"sunt anim dolore Lorem\",\n  \"batch_code\": \"Duis commodo ut\",\n  \"supplier_ref\": \"fugiat occaecat dolor laborum do\",\n  \"expiry_date\": \"2003-07-21\",\n  \"qty\": 26203491.94286576,\n  \"currency\": \"elit Ut pariatur nostrud\",\n  \"cost_total\": -87756043.13143797,\n  \"created_at\": \"1959-12-02T09:11:37.906Z\"\n}"
+										},
+										{
+											"name": "Validation Error",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"qty\": -93787981.23589167,\n  \"batch_code\": \"deserunt non velit consectetur\",\n  \"supplier_ref\": \"est\",\n  \"expiry_date\": \"1965-12-24\",\n  \"currency\": \"USD\",\n  \"cost_total\": -127706.65416881442\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/items/:item_id/batches",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														":item_id",
+														"batches"
+													],
+													"variable": [
+														{
+															"key": "item_id",
+															"value": "dolore eiusmod ipsum nulla",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+											"code": 422,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+										}
+									]
+								},
+								{
+									"name": "List Batches",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id/batches",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id",
+												"batches"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Successful Response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/items/:item_id/batches",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														":item_id",
+														"batches"
+													],
+													"variable": [
+														{
+															"key": "item_id",
+															"value": "dolore eiusmod ipsum nulla",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "[\n  {\n    \"id\": \"aliquip incididunt commodo esse i\",\n    \"item_id\": \"laborum culpa consectetur\",\n    \"batch_code\": \"magna mollit Ut\",\n    \"supplier_ref\": \"elit incididunt\",\n    \"expiry_date\": \"2007-06-17\",\n    \"qty\": 22383755.367188618,\n    \"currency\": \"minim in pariatur laboris\",\n    \"cost_total\": -64502853.163728215,\n    \"created_at\": \"2012-01-24T09:09:46.800Z\"\n  },\n  {\n    \"id\": \"enim exercitation\",\n    \"item_id\": \"in elit\",\n    \"batch_code\": \"ipsum minim sed\",\n    \"supplier_ref\": \"amet minim\",\n    \"expiry_date\": \"2018-04-03\",\n    \"qty\": -87155834.44631147,\n    \"currency\": \"laboris tempor laborum aliquip\",\n    \"cost_total\": -38825154.77807868,\n    \"created_at\": \"2009-11-27T20:05:13.353Z\"\n  }\n]"
+										},
+										{
+											"name": "Validation Error",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/items/:item_id/batches",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														":item_id",
+														"batches"
+													],
+													"variable": [
+														{
+															"key": "item_id",
+															"value": "dolore eiusmod ipsum nulla",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+											"code": 422,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Get Item",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/items/:item_id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										":item_id"
+									],
+									"variable": [
+										{
+											"key": "item_id",
+											"value": "dolore eiusmod ipsum nulla",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Successful Response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"sunt enim\",\n  \"name\": \"in eu esse et sed\",\n  \"unit\": \"commodo culpa laboris sunt Ut\",\n  \"sku\": \"in veniam anim\",\n  \"min_stock_qty\": -94679714.1079288,\n  \"created_at\": \"2004-12-28T09:20:57.099Z\",\n  \"updated_at\": \"1948-03-17T22:38:35.213Z\",\n  \"tags\": [\n    \"esse dolore ut\",\n    \"mollit ad veniam laborum deserunt\"\n  ]\n}"
+								},
+								{
+									"name": "Validation Error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Update Item",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"cupidatat magna eu\",\n  \"unit\": \"pcs\",\n  \"sku\": \"non Lorem commodo dolor\",\n  \"min_stock_qty\": 9651708.775502637,\n  \"tags\": [\n    \"irure exercitation commodo dolor\",\n    \"do ea Ut consequat\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items/:item_id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										":item_id"
+									],
+									"variable": [
+										{
+											"key": "item_id",
+											"value": "dolore eiusmod ipsum nulla",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Successful Response",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"enim\",\n  \"unit\": \"ml\",\n  \"sku\": \"commodo dolor\",\n  \"min_stock_qty\": 99345795.12952375,\n  \"tags\": [\n    \"cillum qui aute\",\n    \"quis\"\n  ]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"sunt enim\",\n  \"name\": \"in eu esse et sed\",\n  \"unit\": \"commodo culpa laboris sunt Ut\",\n  \"sku\": \"in veniam anim\",\n  \"min_stock_qty\": -94679714.1079288,\n  \"created_at\": \"2004-12-28T09:20:57.099Z\",\n  \"updated_at\": \"1948-03-17T22:38:35.213Z\",\n  \"tags\": [\n    \"esse dolore ut\",\n    \"mollit ad veniam laborum deserunt\"\n  ]\n}"
+								},
+								{
+									"name": "Validation Error",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"enim\",\n  \"unit\": \"ml\",\n  \"sku\": \"commodo dolor\",\n  \"min_stock_qty\": 99345795.12952375,\n  \"tags\": [\n    \"cillum qui aute\",\n    \"quis\"\n  ]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Item Stock",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/items/:item_id/stock",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										":item_id",
+										"stock"
+									],
+									"variable": [
+										{
+											"key": "item_id",
+											"value": "dolore eiusmod ipsum nulla",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Successful Response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id/stock",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id",
+												"stock"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								},
+								{
+									"name": "Validation Error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/:item_id/stock",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":item_id",
+												"stock"
+											],
+											"variable": [
+												{
+													"key": "item_id",
+													"value": "dolore eiusmod ipsum nulla",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"labore voluptate\",\n  \"unit\": \"pcs\",\n  \"sku\": \"in Ut nisi\",\n  \"min_stock_qty\": 0,\n  \"tags\": [\n    \"est qui adipisicing\",\n    \"Lorem veniam do Duis\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"est nostrud reprehenderit dolor\",\n  \"unit\": \"pcs\",\n  \"sku\": \"velit ipsum proident in magna\",\n  \"min_stock_qty\": 0,\n  \"tags\": [\n    \"eiusmod nulla sunt\",\n    \"irure veniam ut mollit\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"sunt enim\",\n  \"name\": \"in eu esse et sed\",\n  \"unit\": \"commodo culpa laboris sunt Ut\",\n  \"sku\": \"in veniam anim\",\n  \"min_stock_qty\": -94679714.1079288,\n  \"created_at\": \"2004-12-28T09:20:57.099Z\",\n  \"updated_at\": \"1948-03-17T22:38:35.213Z\",\n  \"tags\": [\n    \"esse dolore ut\",\n    \"mollit ad veniam laborum deserunt\"\n  ]\n}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"est nostrud reprehenderit dolor\",\n  \"unit\": \"pcs\",\n  \"sku\": \"velit ipsum proident in magna\",\n  \"min_stock_qty\": 0,\n  \"tags\": [\n    \"eiusmod nulla sunt\",\n    \"irure veniam ut mollit\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "List Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/items?low_stock=false&q=reprehenderit Duis sed adipisicing",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"items"
+							],
+							"query": [
+								{
+									"key": "low_stock",
+									"value": "false"
+								},
+								{
+									"key": "q",
+									"value": "reprehenderit Duis sed adipisicing"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/items?low_stock=false&q=reprehenderit Duis sed adipisicing",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									],
+									"query": [
+										{
+											"key": "low_stock",
+											"value": "false"
+										},
+										{
+											"key": "q",
+											"value": "reprehenderit Duis sed adipisicing"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"sunt anim pariatur quis\",\n    \"name\": \"nostrud\",\n    \"unit\": \"Lorem quis in pariatur\",\n    \"sku\": \"tempor\",\n    \"min_stock_qty\": 86709973.31158352,\n    \"created_at\": \"1956-06-13T20:20:55.182Z\",\n    \"updated_at\": \"2023-10-19T11:46:54.394Z\",\n    \"tags\": [\n      \"offic\",\n      \"commodo in exercitation incididunt\"\n    ]\n  },\n  {\n    \"id\": \"sint quis exercitation Excepteu\",\n    \"name\": \"elit ex pariat\",\n    \"unit\": \"Lorem nisi nostru\",\n    \"sku\": \"consequat sunt\",\n    \"min_stock_qty\": -18857474.504169986,\n    \"created_at\": \"1960-12-12T06:17:12.319Z\",\n    \"updated_at\": \"1977-04-16T05:53:10.056Z\",\n    \"tags\": [\n      \"elit enim veniam\",\n      \"sed\"\n    ]\n  }\n]"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/items?low_stock=false&q=reprehenderit Duis sed adipisicing",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									],
+									"query": [
+										{
+											"key": "low_stock",
+											"value": "false"
+										},
+										{
+											"key": "q",
+											"value": "reprehenderit Duis sed adipisicing"
+										}
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "thresholds",
+			"item": [
+				{
+					"name": "List Thresholds",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/thresholds",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"thresholds"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/thresholds",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"thresholds"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"item_id\": \"culpa ex\",\n    \"min_stock_qty\": -21570805.76617804,\n    \"notify\": true,\n    \"updated_at\": \"1974-11-11T15:45:11.475Z\"\n  },\n  {\n    \"item_id\": \"Duis enim laborum qu\",\n    \"min_stock_qty\": 13199678.303347185,\n    \"notify\": false,\n    \"updated_at\": \"2013-05-20T02:12:48.104Z\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Upsert Threshold",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"item_id\": \"in velit \",\n  \"min_stock_qty\": -96829627.93852186,\n  \"notify\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/thresholds",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"thresholds"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"item_id\": \"in velit \",\n  \"min_stock_qty\": -96829627.93852186,\n  \"notify\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/thresholds",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"thresholds"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"item_id\": \"minim deserunt Duis proident id\",\n  \"min_stock_qty\": 46088431.84100935,\n  \"notify\": true,\n  \"updated_at\": \"2021-04-18T05:05:12.624Z\"\n}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"item_id\": \"in velit \",\n  \"min_stock_qty\": -96829627.93852186,\n  \"notify\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/thresholds",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"thresholds"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Metrics",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/admin/metrics",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"metrics"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/metrics",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"metrics"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{}"
+				}
+			]
+		},
+		{
+			"name": "Stock Report",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reports/stock?format=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reports",
+						"stock"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reports/stock?format=json",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports",
+								"stock"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "json"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "[\n  {\n    \"item_id\": \"nisi velit\",\n    \"name\": \"officia Lorem quis sunt\",\n    \"unit\": \"eu incididunt\",\n    \"current_qty\": 2935064.4917629063,\n    \"min_stock_qty\": 20178065.245850757,\n    \"low_stock\": true\n  },\n  {\n    \"item_id\": \"et sed sint non\",\n    \"name\": \"id fugiat\",\n    \"unit\": \"pariatur Duis\",\n    \"current_qty\": -91339095.9025131,\n    \"min_stock_qty\": -48777943.21664024,\n    \"low_stock\": false\n  }\n]"
+				},
+				{
+					"name": "Validation Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reports/stock?format=json",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports",
+								"stock"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "json"
+								}
+							]
+						}
+					},
+					"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"occaecat dolore non\",\n        \"nulla\"\n      ],\n      \"msg\": \"in Except\",\n      \"type\": \"dolor\"\n    },\n    {\n      \"loc\": [\n        \"fugiat mollit\",\n        \"ut in Duis\"\n      ],\n      \"msg\": \"Lorem cillum laboris\",\n      \"type\": \"ut ad fugiat adipisicing occ\"\n    }\n  ]\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,326 @@
+{
+	"info": {
+		"_postman_id": "5112d97c-b130-4f84-9096-3705b802425e",
+		"name": "Fund raising api",
+		"description": "Postman collection generated from the provided NestJS controllers.\n\nBase paths:\n  - Campaigns: /campaign\n  - Donations (scoped to a campaign): /campaign/:campaignId/donation\n\nNotes:\n  • DTOs:\n    - CreateCampaignDto: { itemName: string, description: string, goalSum: number, type: CampaingType, campaignTtl?: number }\n    - UpdateCampaignDto: Partial<CreateCampaignDto>\n    - CreateDonationDto: { amount: number > 0 }\n  • The enum values for `CampaingType` were not provided; use {{campaignType}} and set it to a valid value for your backend.\n  • No authentication guards were shown in the code; add headers or auth as needed for your app.\n  • Simple status tests (2xx) are attached to requests.\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40301596"
+	},
+	"item": [
+		{
+			"name": "Campaigns",
+			"item": [
+				{
+					"name": "List campaigns",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/campaign",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get campaign by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/campaign/{{campaignId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign",
+								"{{campaignId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create campaign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx/201 Created', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"itemName\": \"Winter Relief\",\n  \"description\": \"Helping families stay warm.\",\n  \"goalSum\": 50000,\n  \"type\": \"{{campaignType}}\",\n  \"campaignTtl\": 30\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/campaign",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update campaign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Updated description\",\n  \"goalSum\": 60000,\n  \"campaignTtl\": 45\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/campaign/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete campaign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx/204', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/campaign/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Donations (per-campaign)",
+			"item": [
+				{
+					"name": "List donations for campaign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/campaign//donation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign",
+								"",
+								"donation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get donation by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/campaign//donation/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign",
+								"",
+								"donation",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create donation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 2xx/201 Created', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 100\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/campaign//donation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"campaign",
+								"",
+								"donation"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "campaignId",
+			"value": "REPLACE_WITH_CAMPAIGN_ID"
+		},
+		{
+			"key": "donationId",
+			"value": "REPLACE_WITH_DONATION_ID"
+		},
+		{
+			"key": "campaignType",
+			"value": "REPLACE_WITH_ENUM_VALUE"
+		}
+	]
+}
