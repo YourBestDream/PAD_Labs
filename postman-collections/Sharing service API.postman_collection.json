@@ -1,0 +1,858 @@
+{
+	"info": {
+		"_postman_id": "04b5a541-c02e-45a5-b354-2b7f4bb8f001",
+		"name": "Sharing service API",
+		"description": "Complete API collection for the Rental Management System with Items and Rentals",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40301596"
+	},
+	"item": [
+		{
+			"name": "Items API",
+			"item": [
+				{
+					"name": "CRUD Operations",
+					"item": [
+						{
+							"name": "Create Item",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"MacBook Pro 16\\\"\",\n  \"description\": \"High-performance laptop for development work\",\n  \"price\": 250000,\n  \"rentalTtl\": 604800\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Items",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Item by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/{{itemId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"{{itemId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Item",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"MacBook Pro 16\\\" (Updated)\",\n  \"description\": \"Updated high-performance laptop for development work\",\n  \"price\": 275000\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items/{{itemId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"{{itemId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Item",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/{{itemId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"{{itemId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Item Queries",
+					"item": [
+						{
+							"name": "Get Available Items",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/available",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"available"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Items In Use",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/in-use",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"in-use"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Overdue Items",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/overdue",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"overdue"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Items In Use by User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/user/{{userId}}/in-use",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"user",
+										"{{userId}}",
+										"in-use"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Item Status Management",
+					"item": [
+						{
+							"name": "Update Item Status",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"HAS_ISSUES\",\n  \"notes\": \"Minor scratches on the surface\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items/{{itemId}}/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"{{itemId}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check Item Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/{{itemId}}/availability",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"{{itemId}}",
+										"availability"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check if Item In Use by User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/{{itemId}}/in-use-by/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"{{itemId}}",
+										"in-use-by",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Rentals API",
+			"item": [
+				{
+					"name": "Rental Management",
+					"item": [
+						{
+							"name": "Create Rental",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"userId\": \"{{userId}}\",\n  \"rentalTtl\": 7,\n  \"notes\": \"Rental for project development\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Rentals",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Rentals with Filters",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals?userId={{userId}}&status=ACTIVE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "{{userId}}"
+										},
+										{
+											"key": "status",
+											"value": "ACTIVE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Rental by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/{{rentalId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"{{rentalId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Rental",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"notes\": \"Updated rental notes\",\n  \"rentalTtl\": 14\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals/{{rentalId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"{{rentalId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Rental Operations",
+					"item": [
+						{
+							"name": "Return Rental",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"conditionOnReturn\": \"Good condition\",\n  \"notes\": \"Returned on time\",\n  \"isBroken\": false\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals/019981ad-5293-74c9-882f-07b3c103ebc5/return",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"019981ad-5293-74c9-882f-07b3c103ebc5",
+										"return"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Return Rental (Broken)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"conditionOnReturn\": \"Screen is cracked\",\n  \"notes\": \"Accidentally dropped the item\",\n  \"isBroken\": true\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals/{{rentalId}}/return",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"{{rentalId}}",
+										"return"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Extend Rental",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"expiresAt\": \"2025-10-15T12:00:00.000Z\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals/{{rentalId}}/extend",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"{{rentalId}}",
+										"extend"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Force Return Rental (Admin)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"adminNotes\": \"Force returned due to overdue status\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals/{{rentalId}}/force-return",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"{{rentalId}}",
+										"force-return"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Rental Queries",
+					"item": [
+						{
+							"name": "Get Overdue Rentals",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/overdue",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"overdue"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User's Rental History",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/user/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User's Active Rentals",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/user//active",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"user",
+										"",
+										"active"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Item's Rental History",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/item/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"item",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Item's Active Rental",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/item/{{itemId}}/active",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"item",
+										"{{itemId}}",
+										"active"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check Can User Rent Item",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/check/{{userId}}/{{itemId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"check",
+										"{{userId}}",
+										"{{itemId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Test Scenarios",
+			"item": [
+				{
+					"name": "Complete Rental Flow",
+					"item": [
+						{
+							"name": "1. Create Test Item",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Test Camera\",\n  \"description\": \"Professional DSLR camera for testing\",\n  \"price\": 150000,\n  \"rentalTtl\": 259200\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2. Check Item Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items//availability",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"",
+										"availability"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3. Check Can User Rent",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/check/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"check",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4. Create Rental",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"userId\": \"{{userId}}\",\n  \"rentalTtl\": 3,\n  \"notes\": \"Test rental for photo shoot\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "5. Get Active Rental",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rentals/item//active",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"item",
+										"",
+										"active"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "6. Extend Rental",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"rentalTtl\": 7,\n  \"notes\": \"Extended for additional project work\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals/{{rentalId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"{{rentalId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "7. Return Rental",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"conditionOnReturn\": \"Excellent condition\",\n  \"notes\": \"Photo shoot completed successfully\",\n  \"isBroken\": false\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/rentals//return",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rentals",
+										"",
+										"return"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "8. Verify Item Available Again",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items//availability",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										"",
+										"availability"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "itemId",
+			"value": "{{$randomUUID}}",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "0199800f-4ac6-7869-9c9e-d6fa971be554",
+			"type": "string"
+		},
+		{
+			"key": "rentalId",
+			"value": "{{$randomUUID}}",
+			"type": "string"
+		}
+	]
+}

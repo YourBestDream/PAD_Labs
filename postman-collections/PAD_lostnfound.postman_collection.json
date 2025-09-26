@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "93a4396f-f3a4-47f4-bc68-f277c737df0c",
+		"name": "PAD_lostnfound",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30256311"
+	},
+	"item": [
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "create lost item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reporterId\": 1,\n  \"name\": \"Bostan\",\n  \"description\": \"hey I've lost a 3 meter high cardboard cutout of mr. Bostan in fafcab, anyone seen it?\",\n  \"isResolved\": false\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/lost-items",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"lost-items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get lost item by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/lost-items/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"lost-items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update lost item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reporterId\": 1,\n  \"name\": \"cardboard Bostan\",\n  \"description\": \"hey I've lost a 3 meter high cardboard cutout of mr. Bostan in fafcab, anyone seen it?\",\n  \"isResolved\": false\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/lost-items/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"lost-items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete lost item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/lost-items/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"lost-items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "threads",
+			"item": [
+				{
+					"name": "list threads for lost item",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/lost-items/1/threads",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"lost-items",
+								"1",
+								"threads"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create thread for lost item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"authorId\": 2,\n  \"lostItemId\": 1,\n  \"name\": \"oops\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/lost-items/1/threads",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"lost-items",
+								"1",
+								"threads"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get thread by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/threads/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"threads",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "list comments in thread",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/threads/1/comments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"threads",
+								"1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add comments to thread",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"authorId\": 3,\n  \"threadId\": 1,\n  \"text\": \"yea i took him home and I'm not giving him back now. he's mine \"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/threads/1/comments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"threads",
+								"1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

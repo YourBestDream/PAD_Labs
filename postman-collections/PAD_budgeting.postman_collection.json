@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "ba55743d-9b7d-40b0-aded-ea43f2318f48",
+		"name": "PAD_budgeting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30256311"
+	},
+	"item": [
+		{
+			"name": "debts",
+			"item": [
+				{
+					"name": "create debt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+									"pm.collectionVariables.set('debt_id', pm.response.json());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"broken cardboard statue of mr. Viorel >:|\",\n  \"amount\": \"{{sample_amount}}\",\n  \"debtorUserId\": \"{{debtor_user_id}}\",\n  \"createdByUserId\": \"{{created_by_user_id}}\",\n  \"debtorPublicExecutionDate\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/debts",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"debts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get debt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/debts/{{debt_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"debts",
+								"{{debt_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pay debt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('status is 204', function () { pm.response.to.have.status(204); });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/debts/{{debt_id}}/pay?initiatedBy={{initiated_by}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"debts",
+								"{{debt_id}}",
+								"pay"
+							],
+							"query": [
+								{
+									"key": "initiatedBy",
+									"value": "{{initiated_by}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgive debt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('status is 204 or 404', function () { pm.expect([204,404]).to.include(pm.response.code); });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/debts/{{debt_id}}/forgive",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"debts",
+								"{{debt_id}}",
+								"forgive"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "budget",
+			"item": [
+				{
+					"name": "add donation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+									"pm.collectionVariables.set('donation_id', pm.response.json());"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"fundraiser\",\n  \"description\": \"alumni drive\",\n  \"amount\": \"500.00\",\n  \"initiatedBy\": \"{{initiated_by}}\",\n  \"isDonationByPartner\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/donations",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"donations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add expense",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+									"pm.collectionVariables.set('expense_id', pm.response.json());"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"office supplies\",\n  \"description\": \"stationery\",\n  \"amount\": \"75.50\",\n  \"initiatedBy\": \"{{initiated_by}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/expenses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"expenses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get balance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+									"pm.test('has balance field', function () { pm.expect(pm.response.json()).to.have.property('balance'); });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/balance",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list ledger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/ledger",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"ledger"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "debtor_user_id",
+			"value": "42",
+			"type": "string"
+		},
+		{
+			"key": "created_by_user_id",
+			"value": "7",
+			"type": "string"
+		},
+		{
+			"key": "initiated_by",
+			"value": "7",
+			"type": "string"
+		},
+		{
+			"key": "sample_amount",
+			"value": "120.00",
+			"type": "string"
+		},
+		{
+			"key": "debt_id",
+			"value": ""
+		}
+	]
+}

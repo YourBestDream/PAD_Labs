@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "032b7ec4-451a-4a4c-a593-cefa2bd2ea1d",
+		"name": "Notification Microservice (Expanded)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39753128"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_notification}}/health",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Prometheus Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_notification}}/admin/metrics",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"admin",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "Create Notification",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"theme\": \"booking.confirmed\",\n  \"desc\": \"Your appointment for tomorrow is confirmed.\",\n  \"roles\": [\"user\"],\n  \"channels\": [\"chats\"],\n  \"target_user_ids\": [\"u_123\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_notification}}/notifications",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Notifications (by Role)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_notification}}/notifications?role=user",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "user"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Notifications (by Channel and User)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_notification}}/notifications?channel=chats&user_id=u_123",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "channel",
+									"value": "chats"
+								},
+								{
+									"key": "user_id",
+									"value": "u_123"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Emit Outgoing Notification",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"theme\": \"system.maintenance\",\n  \"desc\": \"Scheduled maintenance tonight at 2 AM.\",\n  \"role\": [\"admin\", \"teacher\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_notification}}/notifications/emit",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"notifications",
+								"emit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Consume Event (Low Stock)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"author\": \"inventory\",\n  \"theme\": \"low_stock\",\n  \"desc\": \"Coffee beans are running low!\",\n  \"role_involved\": [\"inventory_admin\"],\n  \"date\": \"2025-09-25T10:00:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_notification}}/events",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consume Event (New Chat Message)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"author\": \"chat\",\n  \"theme\": \"message.created\",\n  \"desc\": \"You have a new message from Bob.\",\n  \"role_involved\": [\"all\"],\n  \"date\": \"2025-09-25T11:00:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_notification}}/events",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Record 'notification.delivered' Event",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"evt-003\",\n  \"type\": \"notification.delivered\",\n  \"source\": \"notification-svc\",\n  \"time\": \"2025-09-25T10:11:00Z\",\n  \"specversion\": \"1.0\",\n  \"data\": {\n    \"notification_id\": \"n_1\",\n    \"user_id\": \"u_42\",\n    \"channel\": \"chats\",\n    \"status\": \"delivered\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_notification}}/events/notification.delivered",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"events",
+								"notification.delivered"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Record 'notification.failed' Event",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"evt-004\",\n  \"type\": \"notification.failed\",\n  \"source\": \"notification-svc\",\n  \"time\": \"2025-09-25T10:12:00Z\",\n  \"specversion\": \"1.0\",\n  \"data\": {\n    \"notification_id\": \"n_1\",\n    \"user_id\": \"u_43\",\n    \"channel\": \"discord\",\n    \"error\": \"Webhook unreachable\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_notification}}/events/notification.failed",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"events",
+								"notification.failed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test Utilities",
+			"item": [
+				{
+					"name": "Trigger Test Event",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_notification}}/test/event?event_type=chat.message.created",
+							"host": [
+								"{{baseUrl_notification}}"
+							],
+							"path": [
+								"test",
+								"event"
+							],
+							"query": [
+								{
+									"key": "event_type",
+									"value": "chat.message.created"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl_notification",
+			"value": "http://localhost:8001"
+		}
+	]
+}

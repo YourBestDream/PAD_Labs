@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "9f5572bc-421f-4672-aaa3-1aec1b9f638d",
+		"name": "User Management - Advanced Tests",
+		"description": "A comprehensive test suite for the User Management microservice, covering success paths, validation errors, and conflict scenarios.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39753128"
+	},
+	"item": [
+		{
+			"name": "Setup and Teardown",
+			"item": [
+				{
+					"name": "1. [Setup] Create Primary User ('alice')",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has a user ID\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.id).to.exist;",
+									"    // Automatically save the new user's ID and email for the next tests",
+									"    pm.collectionVariables.set(\"userId\", responseJson.id);",
+									"    pm.collectionVariables.set(\"userEmail\", responseJson.email);",
+									"    pm.collectionVariables.set(\"username\", responseJson.username);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Alice Test\",\n  \"username\": \"alice-test-{{$randomInt}}\",\n  \"email\": \"alice-test-{{$randomInt}}@example.com\",\n  \"role\": [\"student\"],\n  \"group_ids\": [\"g_123\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_user}}/users",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Creates the primary user for testing. It captures the returned `id`, `username`, and `email` and saves them as collection variables to be used in all subsequent requests. Uses `$randomInt` to ensure the user is unique on each full run."
+					},
+					"response": []
+				},
+				{
+					"name": "2. [Teardown] Delete Primary User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_user}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "Cleans up the user created at the beginning of the test suite."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create User (Error Cases)",
+			"item": [
+				{
+					"name": "Create User - Fails (Duplicate Username)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409 Conflict\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Error message is correct for duplicate username\", function () {",
+									"    pm.expect(pm.response.json().detail).to.eql(\"Username already exists\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Another Alice\",\n  \"username\": \"{{username}}\",\n  \"email\": \"another-email-{{$randomInt}}@example.com\",\n  \"role\": [\"student\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_user}}/users",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Attempts to create a new user with the SAME username as the one created in the setup step. Expects a `409 Conflict` error."
+					},
+					"response": []
+				},
+				{
+					"name": "Create User - Fails (Duplicate Email)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409 Conflict\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"pm.test(\"Error message is correct for duplicate email\", function () {",
+									"    pm.expect(pm.response.json().detail).to.eql(\"Email already registered\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Another Alice\",\n  \"username\": \"another-username-{{$randomInt}}\",\n  \"email\": \"{{userEmail}}\",\n  \"role\": [\"student\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_user}}/users",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Attempts to create a new user with the SAME email as the one created in the setup step. Expects a `409 Conflict` error."
+					},
+					"response": []
+				},
+				{
+					"name": "Create User - Fails (Missing Required Field)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Incomplete User\",\n  \"email\": \"incomplete@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl_user}}/users",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Attempts to create a user without the required `username` field. Expects a `422 Unprocessable Entity` validation error."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "List Users (Filtering and Pagination)",
+			"item": [
+				{
+					"name": "List Users - By Search Query 'q'",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Finds the correct user\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.users).to.be.an('array').that.is.not.empty;",
+									"    pm.expect(responseJson.users[0].username).to.equal(pm.collectionVariables.get(\"username\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_user}}/users?q={{username}}",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{username}}"
+								}
+							]
+						},
+						"description": "Filters the user list using the `q` parameter to find the 'alice' user by her username."
+					},
+					"response": []
+				},
+				{
+					"name": "List Users - No Results Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Users array should be empty\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.users).to.be.an('array').that.is.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_user}}/users?q=userthatdoesnotexist12345",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "userthatdoesnotexist12345"
+								}
+							]
+						},
+						"description": "Searches for a user that does not exist. Expects a `200 OK` with an empty `users` array."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verify State",
+			"item": [
+				{
+					"name": "Verify User Cannot Be Found After Deletion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl_user}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl_user}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "This request should be run AFTER the teardown step. It confirms that fetching the deleted user by their ID results in a `404 Not Found` error, proving the soft delete worked."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl_user",
+			"value": "http://localhost:8002"
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "userEmail",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		}
+	]
+}
