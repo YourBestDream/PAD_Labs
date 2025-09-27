@@ -268,7 +268,7 @@ services:
       - "8083:8080"          # moved off 8081 to avoid collision
     restart: unless-stopped
 
-  # ---------- SHARING SERVICE (renewed) ----------
+  # ---------- SHARING SERVICE  ----------
   sharing-db:
     image: postgres:15-alpine
     environment:
@@ -294,9 +294,6 @@ services:
         npm run seed &&
         npm run start:dev
       "
-    volumes:
-      - ./:/app
-      - /app/
     ports:
       - "3000:3000"
     environment:
@@ -388,13 +385,17 @@ services:
     restart: unless-stopped
 
   fundraising-app:
-    image: zekor1/fund-raising-service:latest
-    command: ["/bin/sh", "-c", "/bin/sh /app/scripts/startup-api-local.sh"]
+    image: zekor1/fund-raising-service:v3.01
     ports:
       - "${APP_PORT:-3001}:3000"
-    volumes:
-      - ./:/app
-      - /app/node_modules
+    command: >
+      sh -c "
+        npm ci &&
+        npx prisma migrate deploy &&
+        npx prisma generate &&
+        npm run seed &&
+        npx nest start --watch
+      "
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-fundraising}:${POSTGRES_PASSWORD:-fundraising}@fundraising-db:5432/${POSTGRES_DB:-fundraising_db}}
