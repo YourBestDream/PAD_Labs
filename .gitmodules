@@ -28,3 +28,7 @@
 [submodule "Python/notification"]
 	path = Python/notification
 	url = https://github.com/Twisside/PAD_notification_microservice
+
+[submodule "Javascript/gateway"]
+	path = Javascript/gateway
+	url = https://github.com/auperman-lab/pad-gateway
