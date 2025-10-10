@@ -454,12 +454,13 @@ services:
       retries: 12
 
   budgeting_app:
-    image: tutaf/pad-budgeting:latest
+    image: tutaf/pad-budgeting:newest
     pull_policy: always
     environment:
       BUDGETING_DB_URL: "jdbc:postgresql://budgeting_db:5432/budgeting"
       BUDGETING_DB_USER: "postgres"
       BUDGETING_DB_PASSWORD: "postgres"
+      GATEWAY_BASE_URL: "http://localhost:3025"
     ports:
       - "8081:8080"          # BUDGETING_APP_HOST_PORT=8081
     depends_on:
