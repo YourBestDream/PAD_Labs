@@ -200,7 +200,7 @@ services:
     restart: unless-stopped
 
   user-app:
-    image: twisside/pad.usermanagement:v1
+    image: twisside/pad.usermanagement:v2
     environment:
       DATABASE_URL: postgresql+psycopg2://pad_user:pad_pass@postgres-user-db:5432/pad_db
       USER_DB_USER: pad_user
@@ -244,7 +244,7 @@ services:
     restart: unless-stopped
 
   notif-app:
-    image: twisside/pad.notifications:v1
+    image: twisside/pad.notifications:v2
     command: ["uvicorn","main:app","--host","0.0.0.0","--port","8003"]
     environment:
       DATABASE_URL: postgresql+psycopg2://pad_notif:pad_notif_pass@postgres-notif-db:5432/pad_notif_db
@@ -285,7 +285,7 @@ services:
     restart: unless-stopped
 
   sharing-app:
-    image: zekor1/sharing.service:v3.01
+    image: zekor1/sharing.service:latest
     command: >
       sh -c "
         npm ci &&
@@ -385,7 +385,7 @@ services:
     restart: unless-stopped
 
   fundraising-app:
-    image: zekor1/fund-raising-service:v3.01
+    image: zekor1/fund-raising-service:latest
     ports:
       - "${APP_PORT:-3001}:3000"
     command: >
@@ -454,12 +454,13 @@ services:
       retries: 12
 
   budgeting_app:
-    image: tutaf/pad-budgeting:latest
+    image: tutaf/pad-budgeting:newest
     pull_policy: always
     environment:
       BUDGETING_DB_URL: "jdbc:postgresql://budgeting_db:5432/budgeting"
       BUDGETING_DB_USER: "postgres"
       BUDGETING_DB_PASSWORD: "postgres"
+      GATEWAY_BASE_URL: "http://localhost:3025"
     ports:
       - "8081:8080"          # BUDGETING_APP_HOST_PORT=8081
     depends_on:
