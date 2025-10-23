@@ -467,6 +467,36 @@ services:
       budgeting_db:
         condition: service_healthy
 
+  gateway:
+    build: ../pad-gateway
+    ports:
+      - "3025:3025"
+    environment:
+      TEAMANAGEMENT_SERVICE_URL: "http://tea-app:8000"
+      COMMUNICATION_SERVICE_URL: "http://comm-app:8001"
+      USERS_SERVICE_URL: "http://user-app:8002"
+      NOTIFICATION_SERVICE_URL: "http://notif-app:8003"
+      SHARING_SERVICE_URL: "http://sharing-app:3000"
+      CHECKIN_SERVICE_URL: "http://pad-checkin:3000"
+      BOOKING_SERVICE_URL: "http://pad-booking:3003"
+      FUNDRAISING_SERVICE_URL: "http://fundraising-app:3000"
+      LOSTANDFOUND_SERVICE_URL: "http://lostnfound_app:8080"
+      BUDGETING_SERVICE_URL: "http://budgeting_app:8080"
+      JWTSECRET: "qwerty"
+    depends_on:
+      - tea-app
+      - comm-app
+      - user-app
+      - notif-app
+      - sharing-app
+      - pad-checkin
+      - pad-booking
+      - fundraising-app
+      - lostnfound_app
+      - budgeting_app
+    restart: unless-stopped
+
+
 volumes:
   tea_pg:
   comm_pg:
