@@ -468,7 +468,8 @@ services:
         condition: service_healthy
 
   gateway:
-    build: ../pad-gateway
+    image: auperman/pad-gateway:latest
+    container_name: gateway
     ports:
       - "3025:3025"
     environment:
