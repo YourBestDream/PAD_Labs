@@ -324,7 +324,7 @@ services:
     restart: unless-stopped
 
   pad-checkin:
-    image: auperman/pad-checkin:1.1
+    image: auperman/pad-checkin:latest
     container_name: pad-checkin
     environment:
       DATABASE_URL: postgresql://user:password@checkin-db:5432/padcheckin
@@ -353,7 +353,7 @@ services:
     restart: unless-stopped
 
   pad-booking:
-    image: auperman/pad-booking:1.0
+    image: auperman/pad-booking:latest
     container_name: pad-booking
     environment:
       PORT: "3003"
