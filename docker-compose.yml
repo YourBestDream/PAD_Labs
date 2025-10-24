@@ -34,8 +34,6 @@ services:
         condition: service_healthy
       tea-redis:
         condition: service_healthy
-    ports:
-      - "8000:8000"
     restart: unless-stopped
 
   tea-seed:
@@ -145,8 +143,6 @@ services:
         condition: service_started
       nats:
         condition: service_started
-    ports:
-      - "8001:8001"
     command: >
       uvicorn src.main:app --host 0.0.0.0 --port 8001
       --proxy-headers --forwarded-allow-ips="*"
@@ -211,8 +207,6 @@ services:
     depends_on:
       user-db:
         condition: service_healthy
-    ports:
-      - "8002:8002"
     restart: unless-stopped
 
   user-adminer:
@@ -220,7 +214,7 @@ services:
     depends_on:
       - user-db
     ports:
-      - "8082:8080"          # moved off 8080 to avoid collision
+      - "8082:8080"
     restart: unless-stopped
 
   # ---------- NOTIFICATION ----------
@@ -256,8 +250,6 @@ services:
     depends_on:
       notif-db:
         condition: service_healthy
-    ports:
-      - "8003:8003"
     restart: unless-stopped
 
   notif-adminer:
@@ -265,7 +257,7 @@ services:
     depends_on:
       - notif-db
     ports:
-      - "8083:8080"          # moved off 8081 to avoid collision
+      - "8083:8080"
     restart: unless-stopped
 
   # ---------- SHARING SERVICE  ----------
@@ -294,8 +286,6 @@ services:
         npm run seed &&
         npm run start:dev
       "
-    ports:
-      - "3000:3000"
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://sharing:sharing@sharing-db:5432/sharing_db
@@ -325,14 +315,11 @@ services:
 
   pad-checkin:
     image: auperman/pad-checkin:latest
-    container_name: pad-checkin
     environment:
       DATABASE_URL: postgresql://user:password@checkin-db:5432/padcheckin
     depends_on:
       checkin-db:
         condition: service_healthy
-    ports:
-      - "3002:3000"
     restart: unless-stopped
 
   # ---------- BOOKING SERVICE ----------
@@ -354,7 +341,6 @@ services:
 
   pad-booking:
     image: auperman/pad-booking:latest
-    container_name: pad-booking
     environment:
       PORT: "3003"
       POSTGRES_USER: booking_user
@@ -364,8 +350,6 @@ services:
     depends_on:
       booking-db:
         condition: service_healthy
-    ports:
-      - "3003:3003"
     restart: unless-stopped
 
   # ---------- FUND-RAISING ----------
@@ -386,8 +370,6 @@ services:
 
   fundraising-app:
     image: zekor1/fund-raising-service:latest
-    ports:
-      - "${APP_PORT:-3001}:3000"
     command: >
       sh -c "
         npm ci &&
@@ -414,7 +396,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"          # LOSTNFOUND_DB_HOST_PORT=5432
+      - "5432:5432"
     volumes:
       - pgdata_lostnfound:/var/lib/postgresql/data
     healthcheck:
@@ -430,8 +412,6 @@ services:
       LOSTNFOUND_DB_URL: "jdbc:postgresql://lostnfound_db:5432/lostnfound"
       LOSTNFOUND_DB_USER: "postgres"
       LOSTNFOUND_DB_PASSWORD: "postgres"
-    ports:
-      - "8080:8080"          # LOSTNFOUND_APP_HOST_PORT=8080
     depends_on:
       lostnfound_db:
         condition: service_healthy
@@ -444,7 +424,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5433:5432"          # BUDGETING_DB_HOST_PORT=5433
+      - "5433:5432"
     volumes:
       - pgdata_budgeting:/var/lib/postgresql/data
     healthcheck:
@@ -461,15 +441,12 @@ services:
       BUDGETING_DB_USER: "postgres"
       BUDGETING_DB_PASSWORD: "postgres"
       GATEWAY_BASE_URL: "http://localhost:3025"
-    ports:
-      - "8081:8080"          # BUDGETING_APP_HOST_PORT=8081
     depends_on:
       budgeting_db:
         condition: service_healthy
 
   gateway:
     image: auperman/pad-gateway:latest
-    container_name: gateway
     ports:
       - "3025:3025"
     environment:
@@ -496,7 +473,6 @@ services:
       - lostnfound_app
       - budgeting_app
     restart: unless-stopped
-
 
 volumes:
   tea_pg:

@@ -1,16 +1,24 @@
 # ---------- config ----------
 COMPOSE ?= docker compose
 FILE    ?= docker-compose.yml       # override: make up FILE=prod.yml
-PROJECT ?= tea-comm                # override: make up PROJECT=myproj
+PROJECT ?= tea-comm                 # override: make up PROJECT=myproj
 
 DC = $(COMPOSE) -p $(PROJECT) -f $(FILE)
+
+# Services to scale to 3 on startup (edit if needed)
+APP_SERVICES ?= pad-booking pad-checkin user-app notif-app lostnfound_app budgeting_app fundraising-app sharing-app comm-app tea-app
+
+# Gateway + base URL for smoke tests
+GATEWAY ?= gateway
+BASE    ?= http://localhost:3025
+SMOKE_PATHS ?= /booking/health /checkin/health /users/health /notification/health /lostAndFound/health /budgeting/health /fundRaising/health /sharing/health /communication/health /teaManagement/health
 
 .DEFAULT_GOAL := help
 
 # ---------- lifecycle ----------
 .PHONY: up down destroy restart pull ps logs
-up:              ## Start all services in the background
-	$(DC) up -d
+up:              ## Start all services and scale app services to 3 replicas
+	$(DC) up -d $(foreach s,$(APP_SERVICES),--scale $(s)=3)
 
 down:            ## Stop and remove containers (keep volumes)
 	$(DC) down --remove-orphans
@@ -65,23 +73,31 @@ test/comm:       ## Run only communication tests
 	$(DC) --profile test down --remove-orphans; \
 	exit $$code
 
-# ---------- shells & db utils ----------
-.PHONY: sh psql/tea psql/comm redis/tea redis/comm
+# ---------- shells & utils ----------
+.PHONY: sh sh/gw restart/gw smoke print
 sh:              ## Shell into a running service: make sh S=comm-app
 	@test -n "$(S)" || (echo "Usage: make sh S=<service>"; exit 2)
 	$(DC) exec -it $(S) sh
 
-psql/tea:        ## psql into tea-db
-	$(DC) exec -it tea-db psql -U tea -d tea
+sh/gw:           ## Shell into the gateway container
+	$(DC) exec -it $(GATEWAY) sh
 
-psql/comm:       ## psql into comm-db
-	$(DC) exec -it comm-db psql -U comm -d comm
+restart/gw:      ## Restart the gateway container
+	$(DC) restart $(GATEWAY)
 
-redis/tea:       ## redis-cli into tea-redis
-	$(DC) exec -it tea-redis redis-cli
+smoke:           ## Simple HTTP smoke test against the gateway (200s expected)
+	@command -v curl >/dev/null 2>&1 || { echo "curl is required"; exit 2; }
+	@for p in $(SMOKE_PATHS); do \
+		printf "GET $(BASE)$$p -> "; \
+		curl -s -o /dev/null -w "%{http_code}\n" "$(BASE)$$p" || true; \
+	done
 
-redis/comm:      ## redis-cli into comm-cache
-	$(DC) exec -it comm-cache redis-cli
+print:           ## Print effective variables
+	@echo "PROJECT=$(PROJECT)"
+	@echo "FILE=$(FILE)"
+	@echo "APP_SERVICES=$(APP_SERVICES)"
+	@echo "GATEWAY=$(GATEWAY)"
+	@echo "BASE=$(BASE)"
 
 # ---------- info ----------
 .PHONY: help
