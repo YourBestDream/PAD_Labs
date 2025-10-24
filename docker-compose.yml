@@ -1,4 +1,19 @@
 services:
+  # ---------- DISCOVERY ----------
+  discovery:
+    image: zekor1/discovery:latest
+    container_name: discovery
+    environment:
+      - PORT=4000
+      - TTL_MS=3600000
+      - GATEWAY_URL=http://gateway:3025
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test: [ "CMD", "node", "-e", "fetch('http://localhost:4000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" ]
+      interval: 120s
+      timeout: 10s
+      retries: 1
   # ---------- TEA MANAGEMENT ----------
   tea-db:
     image: postgres:16-alpine
@@ -285,7 +300,7 @@ services:
     restart: unless-stopped
 
   sharing-app:
-    image: zekor1/sharing.service:latest
+    image: zekor1/sharing-service:latest
     command: >
       sh -c "
         npm ci &&
@@ -468,7 +483,7 @@ services:
         condition: service_healthy
 
   gateway:
-    image: auperman/pad-gateway:latest
+    image: auperman/pad-gateway:2.1
     container_name: gateway
     ports:
       - "3025:3025"
@@ -496,7 +511,6 @@ services:
       - lostnfound_app
       - budgeting_app
     restart: unless-stopped
-
 
 volumes:
   tea_pg:

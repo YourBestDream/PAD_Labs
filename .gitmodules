@@ -32,3 +32,6 @@
 [submodule "Javascript/gateway"]
 	path = Javascript/gateway
 	url = https://github.com/auperman-lab/pad-gateway
+[submodule "Javascript/discovery"]
+	path = Javascript/discovery
+	url = https://github.com/zEkoR1/discovery_for_gayway
